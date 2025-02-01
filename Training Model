@@ -1,0 +1,130 @@
+model = models.Sequential()
+
+# First Convolutional Block
+model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(224, 224, 3)))
+model.add(layers.BatchNormalization())  # Batch Normalization for more stable training
+model.add(layers.MaxPooling2D(2, 2))
+model.add(layers.Dropout(0.3))  # Dropout for regularization to prevent overfitting
+
+# Second Convolutional Block
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.BatchNormalization())  # Batch Normalization
+model.add(layers.MaxPooling2D(2, 2))
+model.add(layers.Dropout(0.3))  # Dropout for regularization
+
+# Third Convolutional Block
+model.add(layers.Conv2D(128, (3, 3), activation='relu'))
+model.add(layers.BatchNormalization())  # Batch Normalization
+model.add(layers.MaxPooling2D(2, 2))
+model.add(layers.Dropout(0.3))
+
+# Fourth Convolutional Block (Added for deeper features)
+model.add(layers.Conv2D(256, (3, 3), activation='relu'))
+model.add(layers.BatchNormalization())  # Batch Normalization
+model.add(layers.MaxPooling2D(2, 2))
+model.add(layers.Dropout(0.3))
+
+# Flatten the layers
+model.add(layers.Flatten())
+
+# Fully Connected Layer
+model.add(layers.Dense(256, activation='relu'))
+model.add(layers.BatchNormalization())  # Batch Normalization for Dense layer
+model.add(layers.Dropout(0.5))  # Dropout for regularization
+
+# Output Layer for 38 classes
+model.add(layers.Dense(38, activation='softmax'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Model Definition
+model = models.Sequential()
+
+model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(224, 224, 3)))
+model.add(layers.MaxPooling2D(2, 2))
+
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D(2, 2))
+
+
+model.add(layers.Flatten())
+model.add(layers.Dense(256, activation='relu'))
+model.add(layers.Dense(38, activation='softmax'))
+
+# model summary
+model.summary()
+
+# Compile the Model
+model.compile(optimizer='adam',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Import necessary libraries
+from tensorflow.keras.layers import BatchNormalization
+
+# Build a deeper model with batch normalization
+model = Sequential([
+    Conv2D(32, (3, 3), activation='relu', input_shape=(64, 64, 3)),
+    BatchNormalization(),  # Normalize the activations
+    MaxPooling2D(pool_size=(2, 2)),
+
+    Conv2D(64, (3, 3), activation='relu'),
+    BatchNormalization(),
+    MaxPooling2D(pool_size=(2, 2)),
+
+    Conv2D(128, (3, 3), activation='relu'),
+    BatchNormalization(),
+    MaxPooling2D(pool_size=(2, 2)),
+
+    Flatten(),
+    Dense(256, activation='relu'),  # Increased Dense layer size for more representation power
+    Dropout(0.5),  # Dropout to prevent overfitting
+    Dense(train_generator.num_classes, activation='softmax')
+])
+
+# Compile the model with a learning rate scheduler
+model.compile(optimizer=Adam(learning_rate=0.0005),  # Decreased learning rate for finer updates
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Callbacks: Add ReduceLROnPlateau and EarlyStopping
+callbacks = [
+    ModelCheckpoint('best_model.keras', save_best_only=True, monitor='val_loss', mode='min'),
+    EarlyStopping(monitor='val_loss', patience=7, restore_best_weights=True),  # Increased patience for more epochs
+    ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, min_lr=0.00001)  # Reduce learning rate more aggressively
+]
+
+# Train the model with longer epochs
+history = model.fit(
+    train_generator,
+    epochs=20,  # Increased number of epochs for more training
+    validation_data=validation_generator,
+    callbacks=callbacks
+)
+
+# Save the model (optional)
+model.save('plant_disease_classifier_optimized.keras')
+
+
+import matplotlib.pyplot as plt
+
+# Plot training & validation accuracy
+plt.figure(figsize=(8, 6))
+plt.plot(history.history['accuracy'], label='Training Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+plt.title('Model Accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+plt.legend(loc='upper left')
+plt.show()
+
+# Plot training & validation loss
+plt.figure(figsize=(8, 6))
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.title('Model Loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(loc='upper left')
+plt.show()
