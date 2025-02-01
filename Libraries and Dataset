@@ -1,0 +1,37 @@
+# Set seeds for reproducibility
+# To make the data uniform all over
+import random
+random.seed(0)
+import numpy as np
+np.random.seed(0)
+import tensorflow as tf
+tf.random.set_seed(0)
+
+
+import os
+import json
+from zipfile import ZipFile
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras import layers, models
+
+
+!pip install kaggle
+
+kaggle_credentails = json.load(open("/content/kaggle.json"))
+
+#Kaggle API key as environment variables
+os.environ['KAGGLE_USERNAME'] = kaggle_credentails["username"]
+os.environ['KAGGLE_KEY'] = kaggle_credentails["key"]
+
+!kaggle datasets download -d vipoooool/new-plant-diseases-dataset
+
+!ls
+
+# Unzip the downloaded dataset
+with ZipFile("new-plant-diseases-dataset.zip", 'r') as zip_ref:
+    zip_ref.extractall()
+
